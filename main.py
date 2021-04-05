@@ -16,28 +16,20 @@ def get_link(a):
     status=requests.get(a)
     bs=BeautifulSoup(status.text,"html.parser")
     tbody=bs.find("body").find("tbody")
-    places = tbody.find_all("td",{"class":"local first"})
-    place=[]
-    for i in places:
-        place.append(i.get_text())
-    titles = tbody.find_all("td",{"class":"title"})
-    title=[]
-    for i in titles:
-        title.append(i.find("a").find("span",{"class":"company"}).string)
-    times = tbody.find_all("td",{"class":"data"})
-    time=[]
-    for i in times:
-        time.append(i.get_text())
-    pays=tbody.find_all("td",{"class":"pay"})
-    pay=[]
-    for i in pays:
-        pay.append(i.get_text())
-    dates=tbody.find_all("td",{"class":"regDate last"})
-    date=[]
-    for i in dates:
-        date.append(i.get_text())
+    trs=tbody.find_all("tr")
+    lists=[]
+    for i in trs:
+        try:
+            places = i.find("td",{"class":"local first"}).get_text()
+            titles = i.find("td",{"class":"title"}).get_text()
+            times = i.find("td",{"class":"data"}).get_text()
+            pays=i.find("td",{"class":"pay"}).get_text()
+            dates=i.find("td",{"class":"regDate last"}).get_text()
+            lists.append([places,titles,times,pays,dates])
+        except:
+            pass
 
-    return place,title,time,pay,date
+    return lists
 
 for i in c:
     ahref=i.find("a")
@@ -49,4 +41,5 @@ for i in c:
 
     code = get_link(link)
     writer.writerow(["place","title","time","pay","date"])
-    writer.writerow(code)
+    for i in code:
+        writer.writerow(i)
