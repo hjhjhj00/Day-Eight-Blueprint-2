@@ -35,7 +35,8 @@ for i in c:
     ahref=i.find("a")
     link=ahref.attrs["href"]
     print(link)
-    span = ahref.find("span",{"class":"company"}).string
+    spans = ahref.find("span",{"class":"company"}).string
+    span=spans.replace("/","and")
     file = open(f"{span}.csv", mode="w",encoding="UTF-8")
     writer = csv.writer(file)
 
